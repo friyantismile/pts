@@ -1,0 +1,107 @@
+<?php
+	include("../database/database_connection.php");
+  	include_once('../functions/login_functions.php');
+ 	verify_valid_system_user();
+
+ 	$system_user = $_SESSION['valid_dts_user'];
+	$qry_access = mysqli_query($connection,"select * from tbl_users where username='$system_user'");
+	$access = mysqli_fetch_assoc($qry_access);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Document Tracking System</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../bootstrap/css/bootstrap.min.css">
+	<script src="../bootstrap/js/jquery.min.js"></script>
+	<script src="../bootstrap/js/bootstrap.min.js"></script>
+	<!-- other css -->
+	<link rel="stylesheet" href="../bootstrap/css/designs.min.css">
+
+	<!-- For Tables -->
+	<link rel="stylesheet" href="../bootstrap/css/dataTables.min.css">
+	<script type="text/javascript" src="../bootstrap/js/dataTables.min.js"></script>
+	<link rel="icon" href="../images/dts.png" type="image/gif" sizes="16x16">
+</head>
+<body>
+	<?php
+	/*------------date-------------------*/
+	$date_from_display = $_REQUEST['frommm']."/".$_REQUEST['fromdd']."/".$_REQUEST['fromyyyy'];
+	$date_to_display = $_REQUEST['tomm']."/".$_REQUEST['todd']."/".$_REQUEST['toyyyy'];
+
+	$date = $_REQUEST['toyyyy']."-".$_REQUEST['tomm']."-".$_REQUEST['todd'];
+	$date1 = str_replace('-', '/', $date);
+	$tomorrow = date('Y-m-d',strtotime($date1 . "+1 days"));
+
+	$tomorrow;
+
+	$date_from = $_REQUEST['fromyyyy']."-".$_REQUEST['frommm']."-".$_REQUEST['fromdd'];
+	$date_to = $tomorrow;
+	?>
+	<div class="container-report-delin">
+		<table class="table-report">
+			<tr>
+				<td colspan="2" style="text-align: center;"><h4>DOCUMENT TRACKING SYSTEM REPORT</h4></td>
+			</tr>
+			<tr>
+				<td style="width:150px;">REPORT TYPE:</td>
+				<td>Delinquent Transactions per Office</td>
+			</tr>
+			<tr>
+				<td style="width:150px;">DATE RANGE:</td>
+				<td><?php echo $date_from_display." to ".$date_to_display?></td>
+			</tr>
+		</table>
+		<br>
+		<table class="table-report" border="1">
+			<tr align="center" style="font-weight: bold;">
+				<td>Office Name</td>
+				<td>Delinquent Transactions</td>
+			</tr>
+			<!-- <tr align="center" style="font-weight: bold;">
+				<td width="100px;">On-time</td>
+				<td width="100px;">Deliquent</td>
+				<td width="100px;">Total</td>
+			</tr> -->
+			<?php
+			$qry_office = mysqli_query($connection,"select *,count(a.office_code)as no_of_del from tbl_document_transaction a, tbl_document b, tbl_office c, tbl_office_performance d where a.barcode=b.barcode and a.office_code=c.office_code and a.office_code=d.office_code and d.document_code=b.document_type and a.office_time>d.office_time and a.recieve_date_time between '$date_from' and '$date_to' group by a.office_code  having count(a.office_code)>=1 order by count(a.office_code)desc");
+			
+			$total = 0;
+
+			for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
+				$rows = mysqli_fetch_assoc($qry_office);
+				echo "<tr>";
+				echo "<td>&nbsp;&nbsp;$rows[office_code] - $rows[office_name]</td>";
+
+				// $qry_undue = mysqli_query($connection,"select *,(a.office_code)res_office,((a.office_time-d.office_time)/d.office_time)totalofficedelayed from tbl_document_transaction a, tbl_document b, tbl_office c, tbl_office_performance d where a.barcode=b.barcode and a.office_code=c.office_code and a.office_code=d.office_code and d.document_code=b.document_type and a.office_time<d.office_time and a.office_code='$rows[office_code]' and a.recieve_date_time between '$date_from' and '$date_to' ");
+
+				$qry_delin = mysqli_query($connection,"select *,(a.office_code)res_office,((a.office_time-d.office_time)/d.office_time)totalofficedelayed from tbl_document_transaction a, tbl_document b, tbl_office c, tbl_office_performance d where a.barcode=b.barcode and a.office_code=c.office_code and a.office_code=d.office_code and d.document_code=b.document_type and a.office_time>d.office_time and a.office_code='$rows[office_code]' and a.recieve_date_time between '$date_from' and '$date_to' ");
+
+				// $undue = mysqli_num_rows($qry_undue);
+				$delin = mysqli_num_rows($qry_delin);
+				// $total = $undue+$delin;
+
+				//echo "<td align='center'>".number_format($undue)."</td>";
+				echo "<td align='center'>".number_format($delin)."</td>";
+				//echo "<td align='center'>".number_format($total)."</td>";
+				echo "</tr>";
+				$total += $rows['no_of_del'];
+			}
+
+			?>
+			<tr style="font-weight: bold;">
+				<td align="right">Total: &nbsp;&nbsp;&nbsp;&nbsp;</td>
+				<td align="center"><?php echo number_format($total); ?></td>
+			</tr>
+		</table>
+		<a href="show_delinquencies_detailed.php?fromyyyy=<?php echo $_REQUEST['fromyyyy'];?>&frommm=<?php echo $_REQUEST['frommm']?>&fromdd=<?php echo $_REQUEST['fromdd']?>&toyyyy=<?php echo $_REQUEST['toyyyy']?>&tomm=<?php echo $_REQUEST['tomm']?>&todd=<?php echo $_REQUEST['todd']?>&user=<?php echo $_REQUEST['user']?>" target="_blank">Click here</a> to view delinquent transactions
+		<br>
+
+		Generated By: <?php echo $_REQUEST['user']; ?>
+		<br>
+		Date: <?php echo date("M d, Y");?>
+
+	</div>
+</body>
+</html>

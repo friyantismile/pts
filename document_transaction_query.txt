@@ -1,0 +1,14 @@
+insert into tbl_document_transaction values(NULL,'C234SDE','1','REC','Juancho Martin','2016-10-15 08:13','New Document Trail','ICT','2016-10-15 08:25','-','No Remarks','2016-10-15 08:30')
+
+SELECT
+*,
+timestampdiff(minute,recieve_date_time,release_date_time)-
+timestampdiff(day,recieve_date_time,release_date_time)*900-
+timestampdiff(week,recieve_date_time,release_date_time)*1080 AS office_time,
+
+timestampdiff(minute,transit_date_time,recieve_date_time)-
+timestampdiff(day,transit_date_time,recieve_date_time)*900-
+timestampdiff(week,transit_date_time,recieve_date_time)*1080 AS transit_time
+
+FROM tbl_document_transaction where status='1'
+order by sequence desc 

@@ -12,6 +12,11 @@
 		    $('.too-long').popover();
 		});
 	</script>
+	<style>
+		.row-danger {
+			background-color: #ffc8c4 !important;
+		}
+	</style>
 </head>
 <body>
 
@@ -26,14 +31,20 @@ if(mysqli_num_rows($qrydoc) <= 0) {
 	
 		logs($access['username'],"VIEW DOCUMENT $_REQUEST[barcode] DETAILS AND TRAIL.");
 
-		$qry_show = mysqli_query($connection,"select *,date_format(recieve_date,'%M %d, %Y at %h:%i:%s %p')rdate,date_format(end_date,'%M %d, %Y')edate from tbl_document where barcode='$_REQUEST[barcode]'");
+		$qry_show = mysqli_query($connection,"select *,date_format(recieve_date,'%M %d, %Y at %h:%i:%s %p')rdate,date_format(end_date,'%M %d, %Y')edate, document_type from tbl_document where barcode='$_REQUEST[barcode]'");
 		$doc = mysqli_fetch_assoc($qry_show);
 
-		if($doc['transaction_type']=='SIMP'){
-			$ttype = "Simple";
+		if($doc['transaction_type']=='1M'){
+			$ttype = "Public bidding 1 Million";
+		} else if($doc['transaction_type']=='AMP'){
+			$ttype = "Alternative Mode of Procurement";
+		} else if($doc['transaction_type']=='A2M'){
+			$ttype = "Public bidding above 2 Million";
+		} else if($doc['transaction_type']=='B2M'){
+			$ttype = "Public bidding below 2 Million";
 		}
 		else{
-			$ttype = "Complex";
+			$ttype = "N/A";
 		}
 
 		$qry_doc_type = mysqli_query($connection,"select * from tbl_document_type where document_code='$doc[document_type]'");
@@ -94,11 +105,7 @@ if(mysqli_num_rows($qrydoc) <= 0) {
 					<td><b>Source Type:</b></td>
 					<td><?php echo $stype?></td>
 				</tr>
-				<tr>
-					<td><b>Classification:</b></td>
-					<td><?php echo $doc['is_permanent'] == 0 ? 'N/A':'Permanent';?></td>
-				</tr>
-
+				 
 			</table>
 		</div>
 
@@ -113,24 +120,7 @@ if(mysqli_num_rows($qrydoc) <= 0) {
 
 		<div class="view-document-details2" style="padding-top:10px;height:230px;">
 			<table>
-				<tr>
-					<td style="width:150px;"><b>Transmitted to:</b></td>
-					<td width="345px">
-					<?php 
-						if($doc['to_ocm']=='0') {
-							echo "City Administrator";
-							echo $doc['is_approved'] ? '(Approved)':'';
-						} else if($doc['to_ocm']=='1') {
-							echo "City Mayor";
-							echo $doc['is_approved'] ? '(Approved)':'';
-						} else {
-							echo "N/A";
-						}
-					?>
-					</td>
-				</tr>
-
-			
+				<tr>	
 					<td width="50px"><b>Source:</b></td>
 					<td width="345px"><?php echo ucwords($doc['source_name'])." - ".$doc['gender'];?></td>
 				</tr>
@@ -142,34 +132,9 @@ if(mysqli_num_rows($qrydoc) <= 0) {
 					<td>&nbsp;</td>
 					<td><?php echo $ocode;?></td>
 				</tr>
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/30/2019
-Description :subject matter changed to Communication summary
-New code - 1
--->
 				<tr>
-			 
 					<td colspan="2" width="460px"><b>Subject Matter:</b></td>
 				</tr>
-				<tr>
-					<td colspan="2" class="table-subject-prere">
-						<?php
-						$documentsubjectmatters = mysqli_query($connection,"select * from tbl_document_subject_matter as dsm left join tbl_subject_matter as sm on sm.id=dsm.subject_matter_id where dsm.document_id='$doc[id]'");
-						?>
-						<ul>
-						<?php 
-						for($a=1;$a<=mysqli_num_rows($documentsubjectmatters);$a++){
-								$trans = mysqli_fetch_assoc($documentsubjectmatters);
-								echo "<li>$trans[code] - $trans[subject_matter]</li>";
-						}
-						?>
-						</ul>
-					</td>
-
-				</tr>
-				<!--end new code - 1 -->
 				<tr>
 					<td colspan="2" width="460px"><b>Communication Summary:</b></td>
 				</tr>
@@ -187,9 +152,7 @@ New code - 1
 	            			}
 						?>
 					</td>
-
 				</tr>
-				
 			</table>
 		</div>
 
@@ -261,13 +224,9 @@ echo $attch['description'] != "" ? "<br><small>".$attch["description"]."</small>
 
 						?></a></td>
 						<?php
-
-
-
 						echo "</tr>";
 					}
-				}
-				
+				}				
 				?>
 			</table>
 		</div>
@@ -283,7 +242,7 @@ echo $attch['description'] != "" ? "<br><small>".$attch["description"]."</small>
 					<td colspan="2">DURATION</td>
 					<td rowspan="2" width="150px">REMARKS</td>
 					<?php
-					if($access['office_code']=='REC' || $access['access_level']=='A'){
+					if($access['office_code']=='GSO' || $access['access_level']=='A'){
 						echo "<td width='30px' rowspan='2'></td>";	
 					}
 					?>
@@ -303,22 +262,30 @@ echo $attch['description'] != "" ? "<br><small>".$attch["description"]."</small>
 				</tr>
 			
 				<?php
-						//yants
-						//bug in sorting
-				//$qry_transaction = mysqli_query($connection,"select *,date_format(recieve_date_time,'%b. %d, %Y')rdate,date_format(recieve_date_time,'%I:%i %p')rdate2,date_format(release_date_time,'%b. %d, %Y')rldate,date_format(release_date_time,'%I:%i %p')rldate2 from tbl_document_transaction where barcode='$doc[barcode]' order by sequence desc");
-
-					$qry_transaction = mysqli_query($connection,"select *,date_format(recieve_date_time,'%b. %d, %Y')rdate,date_format(recieve_date_time,'%I:%i %p')rdate2,date_format(release_date_time,'%b. %d, %Y')rldate,date_format(release_date_time,'%I:%i %p')rldate2 from tbl_document_transaction where barcode='$doc[barcode]' order by trans_id desc");
+					$qry_transaction = mysqli_query($connection,"select *,date_format(recieve_date_time,'%b. %d, %Y')rdate,date_format(recieve_date_time,'%I:%i %p')rdate2,date_format(release_date_time,'%b. %d, %Y')rldate,date_format(release_date_time,'%I:%i %p')rldate2, receive_office.office_name as receiveofficename,receive_office.office_code as receiveofficecode, route_office.office_name as routeofficename from tbl_document_transaction left join tbl_office as receive_office on receive_office.office_code=tbl_document_transaction.office_code left join tbl_office as route_office on route_office.office_code=tbl_document_transaction.route_office_code where barcode='$doc[barcode]' order by trans_id desc");
 					$b = 0;
 					for($a=1;$a<=mysqli_num_rows($qry_transaction);$a++){
 						$track = mysqli_fetch_assoc($qry_transaction);
-						$class_row = "row".($b++ & 1);
+
+						$qry_office_performance = mysqli_query($connection,"select * from tbl_office_performance where office_code='$track[receiveofficecode]' and document_code='$doc[document_type]'");
+						$office_performance = mysqli_fetch_assoc($qry_office_performance);
+						$class_row = "row".($b++ & 1); 
+						if($track['office_time'] > $office_performance['office_time'] ){
+							$class_row .=' row-danger ';
+						}
+						
 						echo "<tr class='$class_row' style='font-size:12px; height:30px;'>";
-						echo "<td align='center'>$track[office_code]</td>";
-						echo "<td align='center'>".ucwords($track['person'])."</td>";
+						echo "<td align='center'>$track[receiveofficecode]</td>";
+						echo "<td align='center'>
+								".ucwords($track['person'])."
+								<br><br>
+								".$track['receiveofficename']."</td>";
 						echo "<td align='center'>$track[rdate]<br>$track[rdate2]</td>";
 						echo "<td>$track[recieve_action]</td>";
 						
-						echo "<td align='center'>".ucwords($track['rel_person'])."</td>";
+						echo "<td align='center'>
+								".ucwords($track['rel_person'])."
+								</td>";
 						echo "<td align='center'>$track[rldate]<br>$track[rldate2]</td>";
 						if($track['current_action']=="END"){
 							echo "<td>End Transaction</td>";
@@ -326,16 +293,16 @@ echo $attch['description'] != "" ? "<br><small>".$attch["description"]."</small>
 						else{
 							echo "<td>$track[release_action]</td>";	
 						}
-						echo "<td align='center'>$track[route_office_code]</td>";
+						echo "<td align='center'>$track[route_office_code]<br><br>
+						".$track['routeofficename']."</td>";
 						
 						echo "<td align='right'>".convert_time($track['office_time'])."&nbsp;</td>";
 						echo "<td align='right'>".convert_time($track['transit_time'])."&nbsp;</td>";
 						echo "<td>$track[remarks]</td>";
 						
-						if($access['office_code']=='REC' || $access['access_level']=='A'){
+						if($access['office_code']==$track['receiveofficecode'] || $access['access_level']=='A'){
 							echo "<td align='center'><a href='home.php?menu=edittransaction&transid=$track[trans_id]'><img src='../images/edit.png' class='action-btn-tiny' title='Edit Action and Remarks'></a></td>";
 						}
-
 						echo "</tr>";
 					}
 

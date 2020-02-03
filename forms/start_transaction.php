@@ -13,20 +13,19 @@
 <body>
 	<?php
 		$docid = $_REQUEST['docid'];
-
 		$qry_show = mysqli_query($connection,"select * from tbl_document where id='$docid'");
 		$doc = mysqli_fetch_assoc($qry_show);
 		
 	?>
-	<div class="start-transaction-container">
-		<div class="document-detail">
+	<div class="start-transaction-container" style="width:100%">
+		<div class="document-detail" style="width:100%">
 			<h4>Document Barcode : <?php echo  $doc['barcode'];?></h4>
 		</div>
-		<div class="document-list-office">
+		<div class="document-list-office" style="width:50%">
 			<h4>Office List</h4>
 			<table class="table-office-list">
 				<tr>
-					<td width='50px' height="30px"></td>
+					<td width='150px' height="30px"></td>
 					<td width='400px'>Route to all offices</td>
 					<td width='20px'><a href="home.php?menu=starttransaction&docid=<?php echo $docid;?>&addall"><img src="../images/route.png" class="action-btn" title="Route to all."></a></td>
 				</tr>
@@ -52,11 +51,11 @@
 				?>
 			</table>
 		</div>
-		<div class="document-route-to">
+		<div class="document-route-to" style="width:49.5%">
 			<h4>Route To</h4>
-			<table class="table-office-added">
+			<table class="table-office-added" style="width:100%;">
 				<tr>
-					<td width='50px' height="30px;"></td>
+					<td width='150px' height="30px;"></td>
 					<td width='400px'>Remove all offices</td>
 					<td width='20px'><a href="home.php?menu=starttransaction&docid=<?php echo $docid;?>&deleteall"><img src="../images/back-all.png" class="action-btn" title="Remove all."></a></td>
 				</tr>

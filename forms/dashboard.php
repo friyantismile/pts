@@ -26,7 +26,6 @@
 	</script>
 </head>
 <body>
-	
 	<?php
 		include("../functions/time_functions.php");
 		
@@ -120,11 +119,7 @@
 			 		<?php
 			 		echo "</div>";
 				}	
-
 			}
-
-			
-
 		?>
 	</div>
 	<script>
@@ -274,7 +269,7 @@
 		//START OF NEW CODE
 		//DASHBOARD QUERY
 		//WAHID - 4/29/2019
-		$qry_com_in_simp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COI' and transaction_type='SIMP'");
+		$qry_com_in_simp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COI' and transaction_type='SIMP'" );
 		$qry_com_in_simp = mysqli_fetch_assoc($qry_com_in_simp);
 
 		$qry_com_out_simp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COO' and transaction_type='SIMP'");
@@ -295,62 +290,62 @@
 		$qry_pr_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PR' and transaction_type='COMP'");
 		$qry_pr_comp = mysqli_fetch_assoc($qry_pr_comp);
 
-		$qry_vc_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='VC' and transaction_type='COMP'");
+		$qry_vc_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='VC' and transaction_type='COMP'  ");
 		$qry_vc_comp = mysqli_fetch_assoc($qry_vc_comp);
 
-		$qry_py_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PY' and transaction_type='COMP'");
+		$qry_py_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PY' and transaction_type='COMP'  ");
 		$qry_py_comp = mysqli_fetch_assoc($qry_py_comp);
 
-		$qry_com_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COM' and transaction_type='COMP'");
+		$qry_com_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COM' and transaction_type='COMP'  ");
 		$qry_com_comp = mysqli_fetch_assoc($qry_com_comp);
 
 		//START OF NEW CODE
 		//DASHBOARD QUERY
 		//WAHID - 4/29/2019
-		$qry_com_in_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COI' and transaction_type='COMP'");
+		$qry_com_in_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COI' and transaction_type='COMP'  ");
 		$qry_com_in_comp = mysqli_fetch_assoc($qry_com_in_comp);
 
-		$qry_com_out_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COO' and transaction_type='COMP'");
+		$qry_com_out_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COO' and transaction_type='COMP'  ");
 		$qry_com_out_comp = mysqli_fetch_assoc($qry_com_out_comp);
 
 		//END OF NEW CODE
 		//DASHBOARD QUERY
 		//WAHID - 4/29/2019
-		$qry_aoc_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='AOC' and transaction_type='COMP'");
+		$qry_aoc_comp = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='AOC' and transaction_type='COMP'  ");
 		$qry_aoc_comp = mysqli_fetch_assoc($qry_aoc_comp);
 
 
 
 		// highly technical
-		$qry_po_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PO' and transaction_type='HIGH'");
+		$qry_po_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PO' and transaction_type='HIGH'  ");
 		$qry_po_high = mysqli_fetch_assoc($qry_po_high);
 
-		$qry_pr_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PR' and transaction_type='HIGH'");
+		$qry_pr_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PR' and transaction_type='HIGH'  ");
 		$qry_pr_high = mysqli_fetch_assoc($qry_pr_high);
 
-		$qry_vc_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='VC' and transaction_type='HIGH'");
+		$qry_vc_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='VC' and transaction_type='HIGH'  ");
 		$qry_vc_high = mysqli_fetch_assoc($qry_vc_high);
 
-		$qry_py_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PY' and transaction_type='HIGH'");
+		$qry_py_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='PY' and transaction_type='HIGH'  ");
 		$qry_py_high = mysqli_fetch_assoc($qry_py_high);
 
-		$qry_com_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COM' and transaction_type='HIGH'");
+		$qry_com_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COM' and transaction_type='HIGH'  ");
 		$qry_com_high = mysqli_fetch_assoc($qry_com_high);
 
 		//START OF NEW CODE
 		//DASHBOARD QUERY
 		//WAHID - 4/29/2019
-		$qry_com_in_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COI' and transaction_type='HIGH'");
+		$qry_com_in_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COI' and transaction_type='HIGH'  ");
 		$qry_com_in_high = mysqli_fetch_assoc($qry_com_in_high);
 
-		$qry_com_out_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COO' and transaction_type='HIGH'");
+		$qry_com_out_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='COO' and transaction_type='HIGH'  ");
 		$qry_com_out_high = mysqli_fetch_assoc($qry_com_out_high);
 
 		//END OF NEW CODE
 		//DASHBOARD QUERY
 		//WAHID - 4/29/2019
 
-		$qry_aoc_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='AOC' and transaction_type='HIGH'");
+		$qry_aoc_high = mysqli_query($connection,"select avg(timestampdiff(day,recieve_date,transaction_end_date))result from tbl_document where status!='0' and recieve_date like '$cur_ym%' and transaction_status!='' and document_type='AOC' and transaction_type='HIGH'  ");
 		$qry_aoc_high = mysqli_fetch_assoc($qry_aoc_high);
 
 
@@ -521,18 +516,17 @@
 			<a href="../output/routed_to_office.php?office_code=<?php echo $access['office_code'];?>&user=<?php echo $access['full_name'];?>&action=todo" target="_blank" style="text-decoration: none;"> 
 				<div class="figure-dash">
 					<?php
-						$current = date("Y-m");
-
-						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.route_office_code='$access[office_code]' and a.current_action='REL' and a.barcode=b.barcode");
+						 
+						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.route_office_code='$access[office_code]' and a.current_action='REL' and a.barcode=b.barcode and (year(b.recieve_date) = year(now()))");
 		
 						$total = 0;
-
-						for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
-							$rows = mysqli_fetch_assoc($qry_office);
-				
-							$total += $rows['no_of_doc'];
+						if($qry_office){
+							for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
+								$rows = mysqli_fetch_assoc($qry_office);
+					
+								$total += $rows['no_of_doc'];
+							}
 						}
-
 						echo $total;
 					?>
 				</div>
@@ -551,9 +545,8 @@
 			<a href="../output/routed_to_office.php?office_code=<?php echo $access['office_code'];?>&user=<?php echo $access['full_name'];?>&action=done" target="_blank" style="text-decoration: none;"> 
 				<div class="figure-dash">
 					<?php
-						$current = date("Y-m");
-
-						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.office_code='$access[office_code]' and (a.current_action='REC') and a.barcode=b.barcode");
+						
+						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.office_code='$access[office_code]' and (a.current_action='REC') and a.barcode=b.barcode and (year(b.recieve_date) = year(now()))");
 		
 						$total = 0;
 
@@ -574,9 +567,8 @@
 			<a href="../output/routed_to_office.php?office_code=<?php echo $access['office_code'];?>&user=<?php echo $access['full_name'];?>&action=completed" target="_blank" style="text-decoration: none;"> 
 				<div class="figure-dash">
 					<?php
-						$current = date("Y-m");
-
-						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.office_code='$access[office_code]' and (a.current_action='END' || a.current_action='') and a.barcode=b.barcode");
+				
+						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.office_code='$access[office_code]' and (a.current_action='END' || a.current_action='') and a.barcode=b.barcode and (year(b.recieve_date) = year(now()))");
 		
 						$total = 0;
 

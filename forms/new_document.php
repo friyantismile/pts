@@ -184,112 +184,34 @@
 					<div class="form-label">Email Address</div>
 				</div>
 		        <div class="form-group form-inline form-space">
-		        	<!-- START OF OLD CODE
-		        		FROM REQUIRED TO NON-REQUIRED
-		        		WAHID 4/29/2019
-		        	<select class="form-control" style="width:171px;" name="gender" id="gender" required="required"
-		        	END OF OLD CODE
-					FROM REQUIRED TO NON-REQUIRED
-		        	WAHID 4/29/2019
-		        	-->
-		        	<!-- START OF NEW CODE
-		        		 FROM REQUIRED TO NON-REQUIRED
-		        		 WAHID 4/29/2019 -->
 		        	<select class="form-control" style="width:171px;" name="gender" id="gender">
-		        	<!-- END OF NEW CODE
-		        		 FROM REQUIRED TO NON-REQUIRED
-		        		 WAHID 4/29/2019 -->
 						<option value="">Select One</option>
 						<option value="Male">Male</option>
 						<option value="Female">Female</option>
-						
 					</select>
 					<input type="text" class="form-control" style="width:150px" name="contactno" id="contactno" placeholder="(072) 607 1234">
 					<input type="text" class="form-control" style="width:179px" name="emailaddress" id="emailaddress" placeholder="juan@domain.com">
 		        </div>
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :Added for html list of subject matter
-New code - 1
--->
-				<div class="form-group form-inline form-space" >
-				Subject Matter
-					<select class="custom-select form-label" name="sub_subjectmatter[]" multiple style="width:100%">
-						<option selected></option>
-						<?php
-							$qry_source = mysqli_query($connection,"select * from tbl_subject_matter order by code asc");
-							for($a=1;$a<=mysqli_num_rows($qry_source);$a++){
-								$trans = mysqli_fetch_assoc($qry_source);
-								echo "<option value='$trans[id]'>$trans[code] - $trans[subject_matter]</option>";
-							}
-						?>
-					</select>
-				</div>
-<!--End New code - 1-->
 
-		        <div class="form-group form-inline form-space-label form-space">
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :subject matter changed to Communication summary
-New code - 1
--->
-					 
+		        <div class="form-group form-inline form-space-label form-space">	 
 					<div class="form-label" style="width:175px;">Communication Summary</div>
-<!--End New code - 1-->
 				</div>
-	 			<div class="form-group form-space">
-	 				<!-- START OF OLD CODE
-						 FROM REQUIRED TO NON-REQUIRED
-		        		 WAHID 4/29/2019
-					<textarea class="form-control" name="subjectmatter" id="subjectmatter" placeholder="Subject Matter" required="required"></textarea>
-						 END OF OLD CODE
-						 FROM REQUIRED TO NON-REQUIRED
-		        		 WAHID 4/29/2019
-					-->
-					<!-- START OF NEW CODE
-						 FROM REQUIRED TO NON-REQUIRED
-		        		 WAHID 4/29/2019-->
+	 			<div class="form-group form-space">	 
 					<textarea class="form-control" name="subjectmatter" id="subjectmatter" placeholder="Communication Summary"></textarea>
-					<!-- END OF NEW CODE
-						 FROM REQUIRED TO NON-REQUIRED
-		        		 WAHID 4/29/2019-->
-		        </div>
-
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :Added code for is permanent document
-New code - 1
--->
-		        
+		        </div>     
 		       
 				<div class="row">
 					<div class="col-md-8">
-					
 						<div class="form-group form-space-label form-space">
 						<div class="form-label">Transmitted to:</div><br><br>
 						<div class="form-group form-inline form-space-label form-space">
-						<input type='radio' name="directocm" checked value="0"><span >City Administrator </span> &nbsp;
-						<input type='radio' name="directocm" value="1"><span >City Mayor </span> &nbsp;
+						<input type='radio' name="directocm" checked value="0"><span >City Budget Office </span> &nbsp;
 						<input type='radio' name="directocm" value="2"><span >No Approval </span> 
 						</div>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="form-group form-inline form-space-label form-space">
-							<input type="checkbox" class="form-control" name="permanent" id="" placeholder=""> Permanent
-						</div>
-					</div>
-				
 				</div>
-
 				<br>
-<!--End New code - 1-->
 
 		        <div class="form-group form-inline form-space-label form-space">
 					<div class="form-label" style="width:175px;">Linked Document/s</div>
@@ -314,19 +236,9 @@ New code - 1
         <?php
    		}
    		else if($_REQUEST['form']=="edit") {
-/*
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :subject matter changed to Communication summary
-New code - 1
-*/   
-   			//$qry_show = mysqli_query($connection,"select * from tbl_document a, tbl_transaction_type b, tbl_document_type c, tbl_source d, tbl_delivery_method e where a.transaction_type=b.id and a.document_type=c.document_code and a.source_type=d.id and a.delivery_method=e.id and a.id='$_REQUEST[id]'");
-/* end of new code - 1 */	
-			   $qry_show = mysqli_query($connection,"select *, a.id as doc_id from tbl_document a, tbl_transaction_type b, tbl_document_type c, tbl_source d, tbl_delivery_method e where a.transaction_type=b.id and a.document_type=c.document_code and a.source_type=d.id and a.delivery_method=e.id and a.id='$_REQUEST[id]'");
-   
-			
-			   $show = mysqli_fetch_assoc($qry_show);
+			$qry_show = mysqli_query($connection,"select *, a.id as doc_id from tbl_document a, tbl_transaction_type b, tbl_document_type c, tbl_source d, tbl_delivery_method e where a.transaction_type=b.id and a.document_type=c.document_code and a.source_type=d.id and a.delivery_method=e.id and a.id='$_REQUEST[id]'");
+
+			$show = mysqli_fetch_assoc($qry_show);
 
    			$rec_date = explode(" ",$show['recieve_date'])
 
@@ -448,79 +360,14 @@ New code - 1
 					<input type="text" class="form-control" style="width:179px" name="emailaddress" id="emailaddress" placeholder="Email Address" value="<?php echo $show['email_address'];?>" >
 		        </div>
 
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :subject matter changed to Communication summary
-New code - 1
--->
-				<div class="form-group form-inline form-space" >
-				Subject Matter
-					<select class="custom-select form-label" name="sub_subjectmatter[]" multiple style="width:100%">
-						
-						<?php
-							//function to check if subject matter exist on document
-							function isExistOnDocumentSubjectMatter($connection,$subjectmatterid, $docid){
-								$documentsubjectmatter = mysqli_query($connection,"select * from tbl_document_subject_matter where document_id='$docid'");
-
-								while ($row = mysqli_fetch_assoc($documentsubjectmatter))
-								{
-								   	$dsubjectmatterid = $row["subject_matter_id"];
-									if($dsubjectmatterid == $subjectmatterid) {
-									 	return true;
-										break;
-									}	
-								}
-								 
-								return false;
-							}
-						 
-							if (mysqli_num_rows($documentsubjectmatter) <= 0) {
-								echo '<option selected></option>';
-							} else {
-								echo '<option></option>';
-							}
-							$qry_source = mysqli_query($connection,"select * from tbl_subject_matter order by code asc");
-							for($a=1;$a<=mysqli_num_rows($qry_source);$a++){
-								$trans = mysqli_fetch_assoc($qry_source);
-								echo "<option ";
-								echo isExistOnDocumentSubjectMatter($connection, $trans['id'], $show['doc_id']) ? 'selected':'';
-								echo " value='$trans[id]'>$trans[code] - $trans[subject_matter]</option>";
-							}
-							
-						?>
-					</select>
-				</div>
-<!--end new code - 1 -->
+			
 
 		        <div class="form-group form-inline form-space-label form-space">
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :subject matter changed to Communication summary
-New code - 1
--->
 					<div class="form-label" style="width:175px;">Communication Summary</div>
-<!--End New code - 1-->
-					 
 				</div>
 	 			<div class="form-group form-space">
 					<textarea class="form-control" name="subjectmatter" id="subjectmatter" placeholder="Communication Summer" required="required"><?php echo $show['subject_matter'];?></textarea>
 		        </div>
-<!--
-Modification
-Modified by : Yants
-Modified date : 04/04/2019
-Description :Added code for is permanent document
-New code - 1
--->
-
-		         
-		       
-
-
 				<div class="row">
 					<div class="col-md-8">
 					
@@ -566,16 +413,8 @@ New code - 1
 							<?php }?>
 						</div>
 					</div>
-					<div class="col-md-4">
-						<div class="form-group form-inline form-space-label form-space">
-							<input type="checkbox" class="form-control" <?php echo $show['is_permanent']==1 ? 'checked':''; ?> name="permanent" id="" placeholder=""> Permanent
-						</div>
-					</div>
-				
+					 
 				</div>
-
-				 
-<!--End New code - 1-->
 
 		        <div class="form-group form-inline form-space-label form-space">
 					<div class="form-label" style="width:175px;">Linked Document/s</div>
@@ -883,23 +722,14 @@ New code - 1
 			//$ed_date = end_date('2016-11-08',$days['days']);
 			$end_date =  $ed_date." ".$time;
 
-			//Modification
-			//Modified by : Yants
-			//Modified date : 04/04/2019
-			//Description : Permanent field added on database
-			//New code - 1
-			$permanent = 0;
-			if (isset($_REQUEST['permanent'])) {
-				$permanent = 1;
-			}
-			//end new code 1
+			
 
 			//Modification
 			//Modified by : Yants
 			//Modified date : 04/04/2019
 			//Description : Query move to top since the query used on different condition is the same (redundancy reduced)
 			//New code - 1
-			mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','$permanent','$access[username]','$direct_to_ocm','$access[office_code]','1', '0')");
+			mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','0','$access[username]','$direct_to_ocm','$access[office_code]','1', '0')");
 			//end new code - 1
 
 			//Modification
@@ -1021,10 +851,6 @@ New code - 1
 						<?php
 					}
 					else{
-					    //echo 'Message has been sent';
-					    //old code 04/04/19
-					    // mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','$access[username]','$direct_to_ocm','$access[office_code]','1')");
-
 					    logs($access['username'],"ENTERED NEW DOCUMENT $_REQUEST[barcode]. EMAIL SENT SUCCESSFULLY.");
 					    ?>
 						<script type="text/javascript">
@@ -1036,10 +862,6 @@ New code - 1
 					
 				}
 				else{
-				 
-					//old code 04/04/19
-					// mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','$access[username]','$direct_to_ocm','$access[office_code]','1')");
-
 					logs($access['username'],"ENTERED NEW DOCUMENT $_REQUEST[barcode].");
 					?>
 					<script type="text/javascript">
@@ -1105,41 +927,6 @@ New code - 1
 		$ed_date = end_date($rec_date,$days['days']); 
 		$new_end_date =  $ed_date." ".$rec_time;
 
-
-		//Modification
-		//Modified by : Yants
-		//Modified date : 04/04/2019
-		//Description : is_permanent field is added
-		//New code - 1
-		 
-		$permanent = 0;
-		if (isset($_REQUEST['permanent'])) {
-			$permanent = 1;
-		}
-
-
-		//Modification
-		//Modified by : Yants
-		//Modified date : 04/04/2019
-		//Description : subject matter query added
-		//New code - 2
-		$documentid = $_REQUEST['docid'];
-		if ($documentid > 0){
-			if (isset($_REQUEST['sub_subjectmatter'])) {
-				mysqli_query($connection,"delete from tbl_document_subject_matter where document_id='$documentid'");
-			
-				foreach($_REQUEST['sub_subjectmatter'] as $subjectmatter)
-				{
-					if ($subjectmatter!="" || $subjectmatter == 0) {
-						mysqli_query($connection,"insert into tbl_document_subject_matter(document_id, subject_matter_id) values('$documentid', '$subjectmatter')");
-						//echo("Error description: " . mysqli_error($connection));
-					}
-				}
-			}
-		}
-		//end new code - 2
-	 
-
 		$document_qry = mysqli_query($connection,"select * from tbl_document where id='$_REQUEST[docid]' and status='1'");
 		$document = mysqli_fetch_assoc($document_qry);
 		$is_approved = 1;
@@ -1157,7 +944,7 @@ New code - 1
 	
 		if ($to_ocm == '2') {
 
-			mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', is_permanent='$permanent', to_ocm='$to_ocm' where id='$_REQUEST[docid]'");
+			mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', to_ocm='$to_ocm' where id='$_REQUEST[docid]'");
 
 			$qry_search_recieve = mysqli_query($connection,"select * from tbl_document_transaction where barcode='$document[barcode]' and office_code='SMO' and route_office_code='$office_code_approval' and sequence='0'");
 				
@@ -1168,7 +955,7 @@ New code - 1
 
 		}  else {
 			if ($document['is_approved']) {
-				mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', is_permanent='$permanent' where id='$_REQUEST[docid]'");
+				mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]' where id='$_REQUEST[docid]'");
 
 			} else {
 				 
@@ -1225,11 +1012,11 @@ New code - 1
 						logs($access['username'],"DOCUMENT $document[barcode] FOR APPROVAL ROUTE TO $office_code.");
 						//end new code - 1
 						 
-						mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', to_ocm='$to_ocm', is_permanent='$permanent' where id='$_REQUEST[docid]'");
+						mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', to_ocm='$to_ocm' where id='$_REQUEST[docid]'");
 					 
 					}		
 				} else {
-					mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', is_permanent='$permanent' where id='$_REQUEST[docid]'");
+					mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]' where id='$_REQUEST[docid]'");
 				}	
 				
 			} 

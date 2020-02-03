@@ -23,7 +23,7 @@ if($access['access_level']=="A"){
 			<form action="" method="post">
 				<h4>Office</h4>
 				<div class="form-group form-space">
-					<input type="text" class="form-control" name="code" id="code" placeholder="Office Code" maxlength="5" required="required">
+					<input type="text" class="form-control" name="code" id="code" placeholder="Office Code" required="required">
 		        </div>
 		        <div class="form-group form-space">
 					<input type="text" class="form-control" name="name" id="name" placeholder="Office Name" required="required">

@@ -240,7 +240,7 @@
 				include("unended_transactions.php");
 			}
 			if($_REQUEST['menu']=="officetransactionstatus"){
-				header('location:../output/office_list_of_document_routed.php');
+				include('../output/office_list_of_document_routed.php');
 			 
 			}
 			

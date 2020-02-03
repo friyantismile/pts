@@ -3,10 +3,6 @@
 	include("../database/database_connection.php");
   	include_once('../functions/login_functions.php');
  	verify_valid_system_user();
-
- 	$system_user = $_SESSION['valid_dts_user'];
-	//$qry_access = mysqli_query($connection,"select * from tbl_users where username='$system_user'");
-	//$access = mysqli_fetch_assoc($qry_access);
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,13 +22,6 @@
 	<link rel="icon" href="../images/dts.png" type="image/gif" sizes="16x16">
 </head>
 <body>
-	<?php
-	/*------------date-------------------*/
-	//$date_display = $_REQUEST['frommm']."/".$_REQUEST['fromyyyy'];
-	
-	//$date = $_REQUEST['fromyyyy']."-".$_REQUEST['frommm'];
-
-	?>
 	<div class="container-report-delin">
 		<table class="table-report">
 			<tr>
@@ -66,11 +55,11 @@
 			$qry_office = mysqli_query($connection,"select * from tbl_office order by office_name asc");
 			for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
 				$rows = mysqli_fetch_assoc($qry_office);
-				$qry_todo = $qry_to_office = mysqli_query($connection,"select * from tbl_document_transaction a, tbl_document b where a.route_office_code='$rows[office_code]' and a.current_action='REL' and a.barcode=b.barcode");
+				$qry_todo = $qry_to_office = mysqli_query($connection,"select * from tbl_document_transaction a, tbl_document b where a.route_office_code='$rows[office_code]' and a.current_action='REL' and a.barcode=b.barcode and year(b.recieve_date) >= year(NOW())");
  
-				$qry_rec = mysqli_query($connection,"select * from tbl_document_transaction a, tbl_document b where a.office_code='$rows[office_code]' and (a.current_action='REC') and a.barcode=b.barcode");
+				$qry_rec = mysqli_query($connection,"select * from tbl_document_transaction a, tbl_document b where a.office_code='$rows[office_code]' and (a.current_action='REC') and a.barcode=b.barcode and year(b.recieve_date) >= year(NOW())");
 
-				$qry_done = mysqli_query($connection,"select * from tbl_document_transaction a, tbl_document b where a.office_code='$rows[office_code]' and (a.current_action='END' || a.current_action='') and a.barcode=b.barcode");
+				$qry_done = mysqli_query($connection,"select * from tbl_document_transaction a, tbl_document b where a.office_code='$rows[office_code]' and (a.current_action='END' || a.current_action='') and a.barcode=b.barcode and year(b.recieve_date) >= year(NOW())");
 
 				$todo = mysqli_num_rows($qry_todo);
 				$done = mysqli_num_rows($qry_done);

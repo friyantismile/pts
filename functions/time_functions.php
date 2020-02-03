@@ -196,6 +196,4 @@ function get_total_transit_time($barcode){
 
 	return $total['total_transit_time'];
 }
-
-
 ?>

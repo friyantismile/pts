@@ -199,19 +199,6 @@
 	 			<div class="form-group form-space">	 
 					<textarea class="form-control" name="subjectmatter" id="subjectmatter" placeholder="Communication Summary"></textarea>
 		        </div>     
-		       
-				<div class="row">
-					<div class="col-md-8">
-						<div class="form-group form-space-label form-space">
-						<div class="form-label">Transmitted to:</div><br><br>
-						<div class="form-group form-inline form-space-label form-space">
-						<input type='radio' name="directocm" checked value="0"><span >City Budget Office </span> &nbsp;
-						<input type='radio' name="directocm" value="2"><span >No Approval </span> 
-						</div>
-						</div>
-					</div>
-				</div>
-				<br>
 
 		        <div class="form-group form-inline form-space-label form-space">
 					<div class="form-label" style="width:175px;">Linked Document/s</div>
@@ -368,53 +355,6 @@
 	 			<div class="form-group form-space">
 					<textarea class="form-control" name="subjectmatter" id="subjectmatter" placeholder="Communication Summer" required="required"><?php echo $show['subject_matter'];?></textarea>
 		        </div>
-				<div class="row">
-					<div class="col-md-8">
-					
-						<div class="form-group form-space-label form-space">
-							<div class="form-label">Transmitted to:</div>
-							<?php 
-
-							$qrycheckdoc = mysqli_query($connection,"select * from tbl_document_transaction where barcode='$show[barcode]'");
-
-							if(!$show['is_approved'] && $show['to_ocm']!=2 && mysqli_num_rows($qrycheckdoc) <= 1) { ?>
-							<br><br>
-							<div class="form-group form-inline form-space-label form-space">
-								<input type='radio' name="directocm" <?php echo $show['to_ocm']==0 ? 'checked':''; ?> value="0"><span >City Administrator </span> &nbsp;
-								<input type='radio' name="directocm" <?php echo $show['to_ocm']==1 ? 'checked':''; ?>  value="1"><span >City Mayor </span> 
-								<input type='radio' name="directocm" <?php echo $show['to_ocm']==2 ? 'checked':''; ?>  value="2"><span >No approval </span> 
-							</div>
-						<?php } else { 
-								if( $show['to_ocm']==2 && mysqli_num_rows($qrycheckdoc) >= 1 ){
-									echo "N/A";
-								} else if($show['to_ocm']==2 && mysqli_num_rows($qrycheckdoc) < 1 ) { ?>
-<br><br>
-							<div class="form-group form-inline form-space-label form-space">
-								<input type='radio' name="directocm" <?php echo $show['to_ocm']==0 ? 'checked':''; ?> value="0"><span >City Administrator </span> &nbsp;
-								<input type='radio' name="directocm" <?php echo $show['to_ocm']==1 ? 'checked':''; ?>  value="1"><span >City Mayor </span> 
-								<input type='radio' name="directocm" <?php echo $show['to_ocm']==2 ? 'checked':''; ?>  value="2"><span >No approval </span> 
-							</div>
-								<?php }else {
-									?>
-									
-									<?php echo $show['to_ocm']==0 ? 'City Administator':''; ?>
-									<?php echo $show['to_ocm']==1 ? 'City Mayor':''; 
-
-									if($show['is_approved']){
-										echo '(<span style="color:green;">Approved</span>)';
-
-									} else {
-
-										echo '(<span >Waiting for approval</span>)';
-									}
-								}
-								?>
-								
-							<?php }?>
-						</div>
-					</div>
-					 
-				</div>
 
 		        <div class="form-group form-inline form-space-label form-space">
 					<div class="form-label" style="width:175px;">Linked Document/s</div>
@@ -424,13 +364,7 @@
 		        </div>
 		        <div class="form-group form-inline form-space">
 					Access Code : <b><?php echo $show['access_code'];?></b>
-
-					 
-
 					<input type="hidden" name="accesscode" id="accesscode" value="<?php echo $show['access_code'];?>">
-
-
-					 
 		        </div>
 		        <div class="form-group form-space">
 		        	<button type="submit" class="btn btn-primary" value="update" name="update">Update Document</button>
@@ -605,9 +539,7 @@
             			echo "<a href='home.php?menu=addattachments&docid=$data[id]&barcode=$data[barcode]&searchby'><img src='../images/attachment.png' class='action-btn' title='Add Attachment'></a> ";
 
 						if($data['transaction_status'] == ""){
-							if ($data['to_ocm'] =='2' || $data['is_approved']){
-								echo "<a href='home.php?menu=starttransaction&docid=$data[id]&searchby'><img src='../images/route.png' class='action-btn' title='Start Transact'></a> ";
-							} 
+							echo "<a href='home.php?menu=starttransaction&docid=$data[id]&searchby'><img src='../images/route.png' class='action-btn' title='Start Transact'></a> ";
             				echo "<a href='home.php?menu=newdocument&form=edit&id=$data[id]&table=default&searchby'><img src='../images/edit.png' class='action-btn' title='Edit'></a> ";
 						}
 
@@ -689,12 +621,6 @@
 		else{
 			$office_code = "N/A";
 		}
-
-		if(isset($_REQUEST['directocm'])){
-			$direct_to_ocm = $_REQUEST['directocm'];
-		}
-		 
-
 		
 		$sm = addslashes($_REQUEST['subjectmatter']);
 		$cn = addslashes($_REQUEST['sourcename']);
@@ -718,79 +644,11 @@
 			$time = $exp_date[1];
 			$qry_trans = mysqli_query($connection,"select (days-1)days from tbl_transaction_type where id='$_REQUEST[transactiontype]'");
 			$days = mysqli_fetch_assoc($qry_trans);
-			$ed_date = end_date($current_date,$days['days']); //end_date(start date, number of days)
-			//$ed_date = end_date('2016-11-08',$days['days']);
+			$ed_date = end_date($current_date,$days['days']);
 			$end_date =  $ed_date." ".$time;
 
-			
-
-			//Modification
-			//Modified by : Yants
-			//Modified date : 04/04/2019
-			//Description : Query move to top since the query used on different condition is the same (redundancy reduced)
-			//New code - 1
-			mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','0','$access[username]','$direct_to_ocm','$access[office_code]','1', '0')");
-			//end new code - 1
-
-			//Modification
-			//Modified by : Yants
-			//Modified date : 05/30/2019
-			//Description : Insert route office for approval
-			if ($direct_to_ocm == '0' || $direct_to_ocm == '1'){
-				$xxx = 0;
-				$new_transid = $transaction_id.$xxx;
-				$office_time = compute_minutes("$wh","$wh"); //$current_datetime
-				$office_code = '';
-				
-
-				//TODO Dynamic office change dynamic CRU - wahid
-
-				if($direct_to_ocm == '1'){
-					$office_code = "CMO";
-				} else {
-					$office_code = "ADM";
-				}
-
-				mysqli_query($connection,"insert into tbl_document_transaction values('$new_transid',UPPER('$bc'),'0',NULL,'SMO','$access[full_name]','$wh','New Document Trail','$office_code','$access[full_name]','$wh','For Approval','-','REL','$office_time','0','1')");
-
-				if($_REQUEST["prerequisites"] != '' || $_REQUEST["prerequisites"]!= null) {
-					
-					$preq= $_REQUEST["prerequisites"];
-					$explode = explode(" ",$preq);
-					$x=1;
-					foreach($explode as $i =>$key) {
-						$checkstatusdocs = mysqli_query($connection,"select * from tbl_document where barcode='$key' and status=1 and is_approved=0");
-						if(mysqli_num_rows($checkstatusdocs) > 0) {
-							$statusdoc=mysqli_fetch_assoc($checkstatusdocs);
-							$checkstatustrans = mysqli_query($connection,"select * from tbl_document_transaction where barcode='$statusdoc[barcode]'");
-							if(mysqli_num_rows($checkstatustrans) <= 0) {
-								
-								$office_codetmp = $office_code;
-								if($statusdoc['to_ocm'] == '1'){
-									$office_code = "CMO";
-								} else if($statusdoc['to_ocm'] == '0') {
-									$office_code = "ADM";
-								} else {
-									mysqli_query($connection,"update tbl_document set to_ocm='$office_codetmp' where barcode='$statusdoc[barcode]'");
-								}
-								$new_transid = $transaction_id.$x;
-								mysqli_query($connection,"insert into tbl_document_transaction values('$new_transid',UPPER('$statusdoc[barcode]'),'0',NULL,'SMO','$access[full_name]','$wh','New Document Trail','$office_codetmp','$access[full_name]','$wh','For Approval','-','REL','$office_time','0','1')");
-								$x++;
-							}
-						}
-					}
-				}
-				//get total_office and total_transit time
-				$add_office_time = get_total_office_time($bc)+$office_time;	
-
-				mysqli_query($connection,"update tbl_document set total_office_time='$add_office_time' where barcode='$bc'");
-
-				logs($access['username'],"DOCUMENT $doc[barcode] FOR APPROVAL ROUTE TO $office_code.");
-			}
-			//end new code - 1
-
-			
-		
+			mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','0','$access[username]','2','$access[office_code]','1', '1')");
+			 
 			if($_REQUEST['sourcetype']=="EXT"){
 				if($_REQUEST['emailaddress']!=""){
 					//require '../phpmailer/PHPMailerAutoload.php';
@@ -839,9 +697,7 @@
 					if(!$mail->send()){
 						echo 'Message could not be sent.';
 					    echo 'Mailer Error: ' . $mail->ErrorInfo;
-					    //old code 04/04/19
-					    // mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','$access[username]','$direct_to_ocm','$access[office_code]','1')");
-
+					    
 					    logs($access['username'],"ENTERED NEW DOCUMENT $_REQUEST[barcode]. ERROR IN SENDING EMAIL.");
 					    ?>
 						<script type="text/javascript">
@@ -872,9 +728,6 @@
 				}	
 			}
 			else{
-				//old code 04/04/19
-				//mysqli_query($connection,"insert into tbl_document values(NULL,'$wh','$end_date','$bc','$_REQUEST[transactiontype]','$_REQUEST[documenttype]','$_REQUEST[sourcetype]','$office_code','$_REQUEST[deliverymethod]','$cn','$_REQUEST[gender]','$_REQUEST[contactno]','$_REQUEST[emailaddress]','$sm','$_REQUEST[prerequisites]','$_REQUEST[accesscode]','0','0','0000-00-00','','$access[username]','$direct_to_ocm','$access[office_code]','1')");
-
 				logs($access['username'],"ENTERED NEW DOCUMENT $_REQUEST[barcode].");
 				?>
 				<script type="text/javascript">
@@ -911,9 +764,6 @@
 			$office_code = "N/A";
 		}
 		
-		if(isset($_REQUEST['directocm'])){
-			$to_ocm = $_REQUEST['directocm'];
-		}
 		 
 		$sm = addslashes($_REQUEST['subjectmatter']);
 		$cn = addslashes($_REQUEST['sourcename']);
@@ -930,103 +780,13 @@
 		$document_qry = mysqli_query($connection,"select * from tbl_document where id='$_REQUEST[docid]' and status='1'");
 		$document = mysqli_fetch_assoc($document_qry);
 		$is_approved = 1;
-		if($to_ocm == '1'){
-			$office_code_approval = "CMO";
-		} else if($to_ocm == '0') {
-			$office_code_approval = "ADM";
-		} 
-
+		 
 		$wh = working_hours();
 		$xxx=0;
 		$new_transid = $transaction_id.$xxx;
 		$office_time = compute_minutes("$document[recieve_date]","$wh"); //$current_datetime
-		
 	
-		if ($to_ocm == '2') {
-
-			mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', to_ocm='$to_ocm' where id='$_REQUEST[docid]'");
-
-			$qry_search_recieve = mysqli_query($connection,"select * from tbl_document_transaction where barcode='$document[barcode]' and office_code='SMO' and route_office_code='$office_code_approval' and sequence='0'");
-				
-
-			if(mysqli_num_rows($qry_search_recieve)<1){
-				mysqli_query($connection,"delete from tbl_document_transaction where barcode='$document[barcode]' and office_code='SMO' and route_office_code!='' and sequence='0'");
-			}
-
-		}  else {
-			if ($document['is_approved']) {
-				mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]' where id='$_REQUEST[docid]'");
-
-			} else {
-				 
-				$qry_search_recieve = mysqli_query($connection,"select * from tbl_document_transaction where barcode='$document[barcode]' and office_code='SMO' and route_office_code='$office_code' and sequence='0'");
-				
-				if(isset($_REQUEST['directocm'])){
-			 
-					if(mysqli_num_rows($qry_search_recieve)<2){
-						
-						$search_recieve = mysqli_fetch_assoc($qry_search_recieve);
-						if($_REQUEST["prerequisites"] != '' || $_REQUEST["prerequisites"]!= null) {
-						
-							$preq= $_REQUEST["prerequisites"];
-							$explode = explode(" ",$preq);
-							$x=1;
-							foreach($explode as $i =>$key) {
-								$checkstatusdocs = mysqli_query($connection,"select * from tbl_document where barcode='$key' and status=1 and is_approved=0");
-								if(mysqli_num_rows($checkstatusdocs) > 0) {
-									$statusdoc=mysqli_fetch_assoc($checkstatusdocs);
-									$checkstatustrans = mysqli_query($connection,"select * from tbl_document_transaction where barcode='$statusdoc[barcode]'");
-									if(mysqli_num_rows($checkstatustrans) <= 1) {
-										echo $office_codetmp = $office_code_approval;
-										if($statusdoc['to_ocm'] == '1'){
-											$office_codetmp = "CMO";
-										} else if($statusdoc['to_ocm'] == '0') {
-											$office_codetmp = "ADM";
-										} else {
-											mysqli_query($connection,"update tbl_document set to_ocm='$statusdoc[to_ocm]' where barcode='$statusdoc[barcode]'");
-										}
-										$new_transid1 = $transaction_id.$x;
-										mysqli_query($connection,"delete from tbl_document_transaction where barcode='$statusdoc[barcode]' and office_code='SMO' and (route_office_code='ADM' or  route_office_code='CMO') and sequence=0");
-
-										mysqli_query($connection,"insert into tbl_document_transaction values('$new_transid1',UPPER('$statusdoc[barcode]'),'0',NULL,'SMO','$access[full_name]','$wh','New Document Trail','$office_codetmp','$access[full_name]','$wh','For Approval','-','REL','$office_time','0','1')");
-										
-										mysqli_query($connection,"update tbl_document set is_approved='$statusdoc[is_approved]', to_ocm='$statusdoc[to_ocm]' where barcode='$statusdoc[barcode]'");
-										$x++;
-									}
-								}
-							}
-						}
-
-
-						mysqli_query($connection,"delete from tbl_document_transaction where barcode='$document[barcode]' and office_code='SMO' and (route_office_code='ADM' or route_office_code='CMO') and sequence=0");
-
-						if(!mysqli_query($connection,"insert into tbl_document_transaction values('$new_transid','$document[barcode]','0',NULL,'SMO','$access[full_name]','$wh','New Document Trail','$office_code_approval','$access[full_name]','$wh','For Approval','-','REL','$office_time','0','1')")){
-							echo("Error description: " . mysqli_error($connection));
-						}
-
-						//get total_office and total_transit time
-						$add_office_time = get_total_office_time($document['barcode'])+$office_time;	
-
-						mysqli_query($connection,"update tbl_document set total_office_time='$add_office_time' where barcode='$document[barcode]'");
-
-						logs($access['username'],"DOCUMENT $document[barcode] FOR APPROVAL ROUTE TO $office_code.");
-						//end new code - 1
-						 
-						mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', to_ocm='$to_ocm' where id='$_REQUEST[docid]'");
-					 
-					}		
-				} else {
-					mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]' where id='$_REQUEST[docid]'");
-				}	
-				
-			} 
-		}
-
-		//end new code - 1
-
-
-		//old code 04/04/2019
-		// mysqli_query($connection,"update tbl_document set end_date='$new_end_date', barcode='$_REQUEST[barcode]', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]', to_ocm='$to_ocm' where id='$_REQUEST[docid]'");
+		mysqli_query($connection,"update tbl_document set end_date='$new_end_date', transaction_type='$_REQUEST[transactiontype]', document_type='$_REQUEST[documenttype]', source_type='$_REQUEST[sourcetype]', office_code='$office_code', delivery_method='$_REQUEST[deliverymethod]', source_name='$cn', gender='$_REQUEST[gender]', contact_no='$_REQUEST[contactno]', email_address='$_REQUEST[emailaddress]', subject_matter='$sm', prerequisite='$_REQUEST[prerequisites]' where id='$_REQUEST[docid]'");
 
 		if($_REQUEST['sourcetype']=="EXT"){
 			 

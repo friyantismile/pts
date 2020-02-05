@@ -196,7 +196,6 @@ if(mysqli_num_rows($qrydoc) <= 0) {
 								foreach($explode as $i =>$key) {
 									$i>0;
 								    echo "<a href='home.php?menu=viewdocument&barcode=$key' target='_blank'>".$key."</a>&nbsp;&nbsp;";
-
 								}
 							}
 						?>
@@ -209,7 +208,7 @@ if(mysqli_num_rows($qrydoc) <= 0) {
 				$show_attachement = mysqli_query($connection,"select * from tbl_document_attachments where barcode='$_REQUEST[barcode]' and status='1'");
 				if(mysqli_num_rows($show_attachement)<=0){
 					echo "<tr>";
-					echo "<td>&nbsp;&nbsp;N/A</td>";
+					echo "<td>&nbsp;	&nbsp;N/A</td>";
 					echo "</tr>";
 				}
 				else{

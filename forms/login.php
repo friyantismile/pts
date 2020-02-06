@@ -56,7 +56,7 @@ else
         <div class="login_container">
             <div class="login_signin_container"> 
                 <br />
-                <h4>Document Tracking System</h4>
+                <h4>Procurement Tracking System</h4>
                 <h6>Zamboanga City</h6>
                 <div class="form-group form-space">
                     <input class="form-control" type="text" placeholder="username" name="username">
@@ -66,20 +66,11 @@ else
                 </div>
                 <button type="submit" class="btn btn-primary" value="Login" name="login">Sign in</button>
             </div>
-            <!--
-                Modification
-                Modified by: Yants
-                Date:4/5/2019
-                old code
-            <div class="login_bottom">
-                <div class="login_city"><a href="javascript:void(0)" onclick="location.href='external_tracking.php'">CLICK HERE TO TRACK DOCUMENT</a></div>
-            </div>
-        -->
             <div class="login_bottom">
                 <div class="login_city"><a href="javascript:void(0)" onclick="location.href='../documents/dts_manual_users.pdf'">HOW TO?</a></div>
             </div>
             <div class="copyright">
-                © 2019 City Government of Zamboanga
+                © 2020 City Government of Zamboanga
             </div>
             
         </div>

@@ -620,8 +620,134 @@
 			</a>
 		</div>
 
+		<div class="alert alert-default" style="
+			padding-left: 0;
+			font-size: x-large;
+			margin: 0;
+			font-weight: 900;
+			width:100%; float:left;
+		"><?php echo $access['office_code'];?> Transactions Status</div>
 		
+		<div style="float: left; padding-right: 10px; width: 200px;">
+			<div class="head-dash-lgreen">TO-DO</div>
+			<div class="sub-head-dash-lgreen">LIST</div>
+			<div class="title-dash">NO. OF DOCUMENTS</div>
+			<a href="../output/routed_to_office.php?office_code=<?php echo $access['office_code'];?>&user=<?php echo $access['full_name'];?>&action=todo" target="_blank" style="text-decoration: none;"> 
+				<div class="figure-dash">
+					<?php
+						 
+						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.route_office_code='$access[office_code]' and a.current_action='REL' and a.barcode=b.barcode and (year(b.recieve_date) = year(now()))");
+		
+						$total = 0;
+						if($qry_office){
+							for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
+								$rows = mysqli_fetch_assoc($qry_office);
+					
+								$total += $rows['no_of_doc'];
+							}
+						}
+						echo $total;
+					?>
+				</div>
+			</a>
+		</div>
+		
+		<div style="float: left; padding-right: 10px; width: 200px;">
+			<div class="head-dash-lgreen">RECEIVED</div>
+			<div class="sub-head-dash-lgreen">LIST</div>
+			<div class="title-dash">NO. OF DOCUMENTS</div>
+			<a href="../output/routed_to_office.php?office_code=<?php echo $access['office_code'];?>&user=<?php echo $access['full_name'];?>&action=done" target="_blank" style="text-decoration: none;"> 
+				<div class="figure-dash">
+					<?php
+						
+						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.office_code='$access[office_code]' and (a.current_action='REC') and a.barcode=b.barcode and (year(b.recieve_date) = year(now()))");
+		
+						$total = 0;
+
+						for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
+							$rows = mysqli_fetch_assoc($qry_office);
+				
+							$total += $rows['no_of_doc'];
+						}
+
+						echo $total;
+					?>
+				</div>
+			</a>
+		</div>
+		<div style="float: left; padding-right: 10px; width: 200px;">
+			 
+			<div class="head-dash-lgreen">COMPLETED</div>
+			<div class="sub-head-dash-lgreen">LIST</div>
+			<div class="title-dash">NO. OF DOCUMENTS</div>
+			<a href="../output/routed_to_office.php?office_code=<?php echo $access['office_code'];?>&user=<?php echo $access['full_name'];?>&action=completed" target="_blank" style="text-decoration: none;"> 
+				<div class="figure-dash">
+					<?php
+				
+						$qry_office = mysqli_query($connection,"select count(a.barcode) as no_of_doc from tbl_document_transaction a, tbl_document b where a.office_code='$access[office_code]' and (a.current_action='END') and a.barcode=b.barcode and (year(b.recieve_date) = year(now()))");
+		
+						$total = 0;
+
+						for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
+							$rows = mysqli_fetch_assoc($qry_office);
+				
+							$total += $rows['no_of_doc'];
+						}
+
+						echo $total;
+					?>
+				</div>
+			</a>
+		</div>
+		<div style="float: left; padding-right: 10px; width: 200px;">
+			<div class="head-dash-red">DELINQUENT</div>
+			<div class="sub-head-dash-red">DOCUMENTS</div>
+			<div class="title-dash">NO. OF DOCUMENTS</div>
+			<a href="../output/show_delinquencies_detailed.php?fromyyyy=<?php echo date('Y');?>&frommm=<?php echo date('m');?>&fromdd=01&toyyyy=<?php echo date('Y');?>&tomm=<?php echo date('m');?>&todd=<?php echo $maxtodd;?>&user=<?php echo $access['full_name'];?>&officecode=<?php echo $access['office_code'];?>" target="_blank" style="text-decoration: none;"> 
+				<div class="figure-dash">
+					<?php
+						$current = date("Y-m");
+
+						$qry_office = mysqli_query($connection,"select *, count(a.office_code)as no_of_del from tbl_document_transaction a, tbl_document b, tbl_office c, tbl_office_performance d where a.office_code ='$access[office_code]' and year(b.recieve_date) = year(now()) and a.barcode=b.barcode and a.office_code=c.office_code and a.office_code=d.office_code and d.document_code=b.document_type and a.office_time>d.office_time and a.recieve_date_time like '$current-%' group by a.office_code  having count(a.office_code)>=1 order by count(a.office_code)desc");
+		
+						$total = 0;
+
+						for($a=1;$a<=mysqli_num_rows($qry_office);$a++){
+							$rows = mysqli_fetch_assoc($qry_office);
+				
+							$total += $rows['no_of_del'];
+						}
+
+						echo $total;
+					?>
+				</div>
+			</a>
+		</div>
+
+		<div style="float: left; padding-right: 10px; width: 200px;">
+			<div style="float: left; padding-right: 10px; width: 200px;">
+			<div class="head-dash-orange">DUE</div>
+			<div class="sub-head-dash-orange">FOR TOMORROW</div>
+			<div class="title-dash">NO. OF DOCUMENTS</div>
+			<a href="../output/for_due.php?user=<?php echo $access['full_name'];?>&officecode=<?php echo $access['office_code'];?>" target="_blank" style="text-decoration: none;"> 
+				<div class="figure-dash">
+					<?php
+						$datenow = date("Y-m-d");
+						$date1 = str_replace('-', '/', $datenow);
+						$tomorrow = date('Y-m-d',strtotime($date1 . "+1 days"));
+
+						$current = date("Y-m");
+						$qry_for_due = mysqli_query($connection,"select count(id) as for_due from tbl_document where office_code ='$access[office_code]' and year(recieve_date) = year(now()) and end_date like '$tomorrow%' and status!=0 and transaction_end_date='0000-00-00'");
+						$nos = mysqli_fetch_assoc($qry_for_due);
+						echo $nos['for_due'];
+					?>
+				</div>
+			</a>
+		</div>
 	</div>	
+
+	
+
 	<div class="dash-palaman" style="margin-bottom: -8px;">
 		<select class="form-control" style="width: 200px; margin-left: -10px;" name="type" id="type" onchange="showDiv()">
 			<option value="simple">Simple</option>

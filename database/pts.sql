@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 17, 2020 at 06:28 AM
+-- Generation Time: Aug 18, 2020 at 05:13 AM
 -- Server version: 10.4.6-MariaDB
 -- PHP Version: 7.2.22
 
@@ -37,6 +37,88 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `TOTAL_WEEKDAYS` (`date1` DATETIME, `
      - (DAYOFWEEK(IF(date1 > date2, date1, date2)) = 7)$$
 
 DELIMITER ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_delivery_method`
+--
+
+CREATE TABLE `tbl_delivery_method` (
+  `id` int(5) NOT NULL,
+  `method` char(30) DEFAULT NULL,
+  `status` char(1) DEFAULT NULL COMMENT '1=Active 0=Inactive'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_delivery_method`
+--
+
+INSERT INTO `tbl_delivery_method` (`id`, `method`, `status`) VALUES
+(1, 'Email', '1'),
+(2, 'Fax', '1'),
+(3, 'Hand Carry', '1'),
+(4, 'Post Mail', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_document`
+--
+
+CREATE TABLE `tbl_document` (
+  `id` int(10) NOT NULL,
+  `recieve_date` datetime DEFAULT NULL,
+  `end_date` datetime DEFAULT NULL,
+  `barcode` char(20) NOT NULL,
+  `transaction_type` char(5) DEFAULT NULL,
+  `document_type` char(5) DEFAULT NULL,
+  `source_type` char(5) DEFAULT NULL,
+  `office_code` char(5) DEFAULT NULL,
+  `delivery_method` char(30) DEFAULT NULL,
+  `source_name` text DEFAULT NULL,
+  `gender` char(6) DEFAULT NULL,
+  `contact_no` char(100) DEFAULT NULL,
+  `email_address` char(100) DEFAULT NULL,
+  `subject_matter` text DEFAULT NULL,
+  `prerequisite` char(200) DEFAULT NULL,
+  `access_code` char(50) DEFAULT NULL,
+  `total_office_time` double DEFAULT NULL,
+  `total_transit_time` double DEFAULT NULL,
+  `transaction_end_date` datetime DEFAULT NULL,
+  `transaction_status` char(1) DEFAULT NULL COMMENT 'D=Delayed O=Ontime',
+  `is_permanent` int(11) NOT NULL DEFAULT 0,
+  `username` char(20) DEFAULT NULL,
+  `to_ocm` char(1) DEFAULT NULL COMMENT '1=OCM, 0=ADM',
+  `rec_office` char(10) DEFAULT NULL,
+  `status` char(1) DEFAULT NULL COMMENT '1=Active 0=Inactive',
+  `is_approved` int(11) NOT NULL DEFAULT 0 COMMENT '0-no, 1-yes'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_document`
+--
+
+INSERT INTO `tbl_document` (`id`, `recieve_date`, `end_date`, `barcode`, `transaction_type`, `document_type`, `source_type`, `office_code`, `delivery_method`, `source_name`, `gender`, `contact_no`, `email_address`, `subject_matter`, `prerequisite`, `access_code`, `total_office_time`, `total_transit_time`, `transaction_end_date`, `transaction_status`, `is_permanent`, `username`, `to_ocm`, `rec_office`, `status`, `is_approved`) VALUES
+(13806, '2020-02-03 13:04:17', '2020-07-06 13:04:17', 'COI1900000000', '1M', '1M', 'INT', 'SWD', '2', 'hh', 'Female', '', '', 'gg', '', 'ELBUUC', 2.52, 0, '0000-00-00 00:00:00', '', 0, 'admin', '0', 'SMO', '1', 0),
+(13807, '2020-02-03 14:57:14', '2020-06-19 14:57:14', 'COI1900000001', 'AMP', 'AMP', 'INT', 'REG', '3', 'h', 'Male', '90000', '', 'hahah', '', 'MGSLZP', 64.67, 0, '0000-00-00 00:00:00', '', 0, 'admin', '2', 'SMO', '1', 1),
+(13808, '2020-02-04 10:18:02', '2020-08-04 10:18:02', 'COI1900000009', 'A2M', 'AMP', 'INT', 'HRM', '3', 'ff', '', '', '', 'fff', '', 'CCIJPR', 0, 0, '0000-00-00 00:00:00', '', 0, 'admin', '2', 'SMO', '1', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_document_attachments`
+--
+
+CREATE TABLE `tbl_document_attachments` (
+  `id` int(10) NOT NULL,
+  `barcode` char(20) DEFAULT NULL,
+  `document_name` text DEFAULT NULL,
+  `attachement_location` text DEFAULT NULL,
+  `status` char(1) DEFAULT NULL COMMENT '1=Active 0=Inactive',
+  `date_uploaded` datetime NOT NULL,
+  `description` text NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -822,6 +904,28 @@ INSERT INTO `tbl_working_hours` (`time_start`, `time_end`) VALUES
 --
 
 --
+-- Indexes for table `tbl_delivery_method`
+--
+ALTER TABLE `tbl_delivery_method`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `tbl_document`
+--
+ALTER TABLE `tbl_document`
+  ADD PRIMARY KEY (`id`,`barcode`),
+  ADD UNIQUE KEY `id` (`id`),
+  ADD KEY `barcode_index` (`barcode`),
+  ADD KEY `document_id_index` (`id`);
+
+--
+-- Indexes for table `tbl_document_attachments`
+--
+ALTER TABLE `tbl_document_attachments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `barcode_index` (`barcode`);
+
+--
 -- Indexes for table `tbl_document_subject_matter`
 --
 ALTER TABLE `tbl_document_subject_matter`
@@ -898,6 +1002,24 @@ ALTER TABLE `tbl_users`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `tbl_delivery_method`
+--
+ALTER TABLE `tbl_delivery_method`
+  MODIFY `id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `tbl_document`
+--
+ALTER TABLE `tbl_document`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13809;
+
+--
+-- AUTO_INCREMENT for table `tbl_document_attachments`
+--
+ALTER TABLE `tbl_document_attachments`
+  MODIFY `id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26640;
 
 --
 -- AUTO_INCREMENT for table `tbl_document_subject_matter`
